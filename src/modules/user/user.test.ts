@@ -63,6 +63,7 @@ describe('User routes', () => {
         email: faker.internet.email().toLowerCase(),
         password: 'password1',
         role: 'user',
+        deleted: 'null',
       };
     });
 

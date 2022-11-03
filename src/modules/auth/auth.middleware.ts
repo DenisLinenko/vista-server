@@ -4,16 +4,15 @@ import httpStatus from 'http-status';
 import ApiError from '../errors/ApiError';
 import { roleRights } from '../../config/roles';
 import { IUserDoc } from '../user/user.interfaces';
-import { logger } from '../logger';
 
 const verifyCallback =
   (req: Request, resolve: any, reject: any, requiredRights: string[]) =>
   async (err: Error, user: IUserDoc, info: string) => {
-
-    if ((err || info || !user) && 1 > 2) {
+    if (err || info || !user) {
       return reject(new ApiError(httpStatus.UNAUTHORIZED, 'Please authenticate'));
     }
     req.user = user;
+    await user.save();
     if (!requiredRights.length) {
       const userRights = roleRights.get(user.role);
       if (!userRights) return reject(new ApiError(httpStatus.FORBIDDEN, 'Forbidden'));
@@ -30,8 +29,6 @@ const authMiddleware =
   (...requiredRights: string[]) => {
   return async (req: Request, res: Response, next: NextFunction) =>
     new Promise<void>((resolve, reject) => {
-      logger.log('debug', `---body---${JSON.stringify(req.body)}`);
-
       passport.authenticate('jwt', { session: false }, verifyCallback(req, resolve, reject, requiredRights))(req, res, next);
     })
       .then(() => next())

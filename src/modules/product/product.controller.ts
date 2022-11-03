@@ -7,6 +7,8 @@ import pick from '../utils/pick';
 import { IOptions } from '../paginate/paginate';
 import * as productService from './product.service';
 import _ from 'lodash';
+// import { logger } from '../logger';
+// logger.log('debug', `---filter---${JSON.stringify(filter)}`);
 
 export const createProduct = catchAsync(async (req: Request, res: Response) => {
   const product = await productService.createProduct(req.body);
@@ -15,14 +17,17 @@ export const createProduct = catchAsync(async (req: Request, res: Response) => {
 
 export const getProducts = catchAsync(async (req: Request, res: Response) => {
   const filter = pick(req.query, ['title']);
+  const {
+    user: { id },
+  } = req || {};
   const options: IOptions = pick(req.query, ['sortBy', 'limit', 'page', 'projectBy']);
-  const result = await productService.queryProducts(filter, options);
+  const result = await productService.queryProducts({ ...filter, deleted: false, userId: id }, options);
   res.send(result);
 });
 
 export const getProduct = catchAsync(async (req: Request, res: Response) => {
   if (typeof req.params['productId'] === 'string') {
-    const product = await productService.getProductById(new mongoose.Types.ObjectId(req.params['productId']));
+    const product = await productService.getProductById(new mongoose.Types.ObjectId(req.params[('productId')]));
     if (!product) {
       throw new ApiError(httpStatus.NOT_FOUND, 'Product not found');
     }
@@ -42,10 +47,10 @@ export const updateProduct = catchAsync(async (req: Request, res: Response) => {
     res.send(product);
   }
 });
-//
-// export const deleteUser = catchAsync(async (req: Request, res: Response) => {
-//   if (typeof req.params['userId'] === 'string') {
-//     await productService.deleteUserById(new mongoose.Types.ObjectId(req.params['userId']));
-//     res.status(httpStatus.NO_CONTENT).send();
-//   }
-// });
+
+export const deleteProduct = catchAsync(async (req: Request, res: Response) => {
+  if (typeof req.params['productId'] === 'string') {
+    await productService.deleteProductById(new mongoose.Types.ObjectId(req.params['productId']));
+    res.status(httpStatus.NO_CONTENT).send();
+  }
+});

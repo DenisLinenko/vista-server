@@ -43,6 +43,14 @@ const productSchema = new mongoose.Schema<IProductDoc, IProductModel>(
       type: Boolean,
       default: false,
     },
+    userId: {
+      type: String,
+      required: true,
+    },
+    deleted: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,

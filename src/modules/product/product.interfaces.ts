@@ -3,6 +3,7 @@ import { QueryResult } from '../paginate/paginate';
 import { AccessAndRefreshTokens } from '../token/token.interfaces';
 
 export interface IProduct {
+  userId: string;
   title: string;
   currentState: string;
   details: string;
@@ -10,6 +11,7 @@ export interface IProduct {
   broadcast: string;
   messageSubject: string;
   affectedInfrastructure: boolean;
+  deleted: boolean;
 }
 
 export interface IProductDoc extends IProduct, Document {

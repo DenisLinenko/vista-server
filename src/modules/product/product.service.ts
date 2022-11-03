@@ -74,16 +74,16 @@ export const updateProductById = async (
   return product;
 };
 
-// /**
-//  * Delete user by id
-//  * @param {mongoose.Types.ObjectId} userId
-//  * @returns {Promise<IUserDoc | null>}
-//  */
-// export const deleteUserById = async (userId: mongoose.Types.ObjectId): Promise<IUserDoc | null> => {
-//   const user = await getUserById(userId);
-//   if (!user) {
-//     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
-//   }
-//   await user.remove();
-//   return user;
-// };
+/**
+ * Delete product by id
+ * @param {mongoose.Types.ObjectId} productId
+ * @returns {Promise<IProductDoc | null>}
+ */
+export const deleteProductById = async (productId: mongoose.Types.ObjectId): Promise<IProductDoc | null> => {
+  const product = await getProductById(productId);
+  if (!product) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Product not found');
+  }
+  await product.remove();
+  return product;
+};

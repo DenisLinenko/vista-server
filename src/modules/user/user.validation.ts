@@ -6,6 +6,7 @@ const createUserBody: Record<keyof NewCreatedUser, any> = {
   email: Joi.string().required().email(),
   password: Joi.string().required().custom(password),
   name: Joi.string().required(),
+  deleted: Joi.boolean(),
   role: Joi.string().required().valid('user', 'admin'),
 };
 
@@ -17,6 +18,7 @@ export const getUsers = {
   query: Joi.object().keys({
     name: Joi.string(),
     role: Joi.string(),
+    deleted: Joi.boolean(),
     sortBy: Joi.string(),
     projectBy: Joi.string(),
     limit: Joi.number().integer(),
@@ -39,6 +41,9 @@ export const updateUser = {
       email: Joi.string().email(),
       password: Joi.string().custom(password),
       name: Joi.string(),
+      role: Joi.string(),
+      isEmailVerified: Joi.boolean(),
+      deleted: Joi.string(),
     })
     .min(1),
 };

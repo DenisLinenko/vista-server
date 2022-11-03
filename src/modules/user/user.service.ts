@@ -1,5 +1,6 @@
 import httpStatus from 'http-status';
 import mongoose from 'mongoose';
+import moment from 'moment';
 import User from './user.model';
 import ApiError from '../errors/ApiError';
 import { IOptions, QueryResult } from '../paginate/paginate';
@@ -81,11 +82,13 @@ export const updateUserById = async (
  * @param {mongoose.Types.ObjectId} userId
  * @returns {Promise<IUserDoc | null>}
  */
+
 export const deleteUserById = async (userId: mongoose.Types.ObjectId): Promise<IUserDoc | null> => {
   const user = await getUserById(userId);
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
-  await user.remove();
+  Object.assign(user, { deleted: moment().format() });
+  await user.save();
   return user;
 };

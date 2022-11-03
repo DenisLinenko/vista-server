@@ -8,6 +8,7 @@ export interface IUser {
   password: string;
   role: string;
   isEmailVerified: boolean;
+  deleted: string;
 }
 
 export interface IUserDoc extends IUser, Document {
@@ -21,7 +22,7 @@ export interface IUserModel extends Model<IUserDoc> {
 
 export type UpdateUserBody = Partial<IUser>;
 
-export type NewRegisteredUser = Omit<IUser, 'role' | 'isEmailVerified'>;
+export type NewRegisteredUser = Omit<IUser, 'role' | 'isEmailVerified' | 'deleted'>;
 
 export type NewCreatedUser = Omit<IUser, 'isEmailVerified'>;
 
